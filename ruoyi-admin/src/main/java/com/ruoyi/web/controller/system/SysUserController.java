@@ -1,6 +1,8 @@
 package com.ruoyi.web.controller.system;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.ArrayUtils;
@@ -52,6 +54,9 @@ public class SysUserController extends BaseController
 
     @Autowired
     private ISysPostService postService;
+
+    @Autowired
+    private ISysRoleService sysRoleService;
 
     /**
      * 获取用户列表
@@ -252,5 +257,34 @@ public class SysUserController extends BaseController
     public AjaxResult deptTree(SysDept dept)
     {
         return success(deptService.selectDeptTreeList(dept));
+    }
+
+
+
+
+    @GetMapping("/roleDist")
+    public AjaxResult roleDist() {
+        List<SysRole> roles = sysRoleService.selectRoleAll();
+        List<Map<String, Object>> list = new ArrayList<>();
+        List<SysUser> users = userService.selectUserList(new SysUser());
+
+        for (SysRole role : roles) {
+            long count = users.stream()
+                    .filter(u -> u.getRoleId() != null && u.getRoleId().equals(role.getRoleId()))
+                    .count();
+            list.add(Map.of("name", role.getRoleName(), "value", count));
+        }
+        return AjaxResult.success(list);
+    }
+
+    @GetMapping("/recent")
+    public AjaxResult recent() {
+        SysUser query = new SysUser();
+        // 按创建时间倒序取 5 个
+        List<SysUser> users = userService.selectUserList(query);
+        return AjaxResult.success(users.stream()
+                .sorted((a, b) -> b.getCreateTime().compareTo(a.getCreateTime()))
+                .limit(5)
+                .collect(Collectors.toList()));
     }
 }

@@ -182,11 +182,13 @@
 import NoticeDetailView from "@/layout/components/HeaderNotice/DetailView"
 import ReadUsersDialog from "./ReadUsers"
 import { listNotice, getNotice, delNotice, addNotice, updateNotice } from "@/api/system/notice"
-
+//export default默认导出，export与public相似，是{}中文件的出口，default在一个文件里面只能有一个默认daochu
+//{}里面装的是对象字面量，本质是键值对
 export default {
   name: "Notice",
   components: { NoticeDetailView, ReadUsersDialog },
   dicts: ['sys_notice_status', 'sys_notice_type'],
+  //数据，
   data() {
     return {
       // 遮罩层
@@ -231,6 +233,7 @@ export default {
   created() {
     this.getList()
   },
+  //方法
   methods: {
     /** 查询公告列表 */
     getList() {

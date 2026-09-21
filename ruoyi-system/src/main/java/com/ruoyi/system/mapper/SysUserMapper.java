@@ -28,6 +28,11 @@ public interface SysUserMapper
      */
     public List<SysUser> selectAllocatedList(SysUser user);
 
+
+
+
+
+
     /**
      * 根据条件分页查询未分配用户角色列表
      * 
